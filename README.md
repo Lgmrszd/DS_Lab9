@@ -5,9 +5,13 @@ To start app, install libraries (`pip install -r requirements.txt`) and then `gu
 
 ### Report
 /etc/hosts on each node:
+
 ![etc_hosts](screenshots/etc_hosts.png)
+
 mongod.conf on each node:
+
 ![mongod_conf](screenshots/mongod_conf.png)
+
 `rs.status()` from mongod on storage1:
 
 ```MongoDB shell version v4.2.1
