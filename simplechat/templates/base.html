@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    {% if title %}
+    <title>{{ title }}</title>
+    {% else %}
+    <title>My small site</title>
+    {% endif %}
+    <style>
+        ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background: rgba(0, 0, 0, 0.6);
+        }
+
+        li {
+            float: left;
+        }
+
+        li a {
+            display: block;
+            color: lightblue;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+
+        li a:hover {
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        img {
+            max-width: 100%;
+            max-height: 100%;
+        }
+    
+        iframe {
+            max-width: 100%;
+            max-height: 100%;
+        }
+        
+        body {
+            color:lightblue;
+            background-color: coral;
+            /* margin: 0; */
+        }
+        a {
+            color: cornflowerblue;
+        }
+        main {
+            background: rgba(0, 0, 0, 0.5);
+            margin: 10em 10% 7em 10%;
+            padding: 3em 3em 3em 3em;
+            align-content: center;
+            overflow: auto;
+            /* margin: 0; */
+        }
+    </style>
+</head>
+<body>
+    <ul>
+        <li><a href={{ url_for("index") }}>Main page</a></li>
+{#        <li><a href={{ url_for("cool_video") }}>Cool video</a></li>#}
+{#        <li><a href={{ url_for("about") }}>About</a></li>#}
+    </ul>
+    {% block body_content %}
+    <main>
+        {% block main_content %}{% endblock %}
+    </main>
+    {% endblock %}
+</body>
+</html>

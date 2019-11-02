@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+
+{% block main_content %}
+<style>
+    .messages-chat {
+        border-color: aliceblue;
+        border-width: thick;
+        border-style: groove;
+    }
+    .messages-holder {
+        border-color: aliceblue;
+        border-width: thin;
+        border-style: groove;
+    }
+    .messages-controls {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-evenly;
+        {#flex-wrap: wrap;#}
+        {#align-content: flex-end;#}
+    }
+    .message {
+        border-color: rgba(0.5, 0.5, 0.5, 0.2);
+        border-width: thin;
+        border-style: solid;
+    }
+    input {
+        width: 100%;
+    }
+</style>
+<h1>Simple Chat</h1>
+<div class="messages-chat">
+    <div class="messages-holder">
+    </div>
+    <form class="messages-controls">
+        <div  style="flex-grow: 1">
+            <button type="button" style="width: 80%" onclick="updateMessages()">update</button>
+        </div>
+        Name:
+        <div  style="flex-grow: 2">
+            <input type="text" name="username" style="width: 80%; margin: 0 5% 0 5%">
+        </div>
+        Message:
+        <div  style="flex-grow: 15">
+            <input type="text" name="message" style="width: 90%; margin: 0 5% 0 5%">
+        </div>
+        <div  style="flex-grow: 2">
+            <button type="button" style="width: 100%" onclick="sendMessage()">Send!</button>
+        </div>
+    </form>
+</div>
+<script>
+    let messages = [];
+    
+    function sendMessage() {
+        let name = document.getElementsByName("username")[0].value;
+        let text = document.getElementsByName("message")[0].value;
+        let data = {"name": name, "text": text};
+        let request = new XMLHttpRequest();
+        request.open("POST", "/api/messages", true);
+        request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+        request.send(JSON.stringify(data));
+        setTimeout(updateMessages, 200)
+    }
+    
+    function formatDate(datetime) {
+        {#let hours = datetime.getHours().toString().padStart(2, " ");#}
+        {#let minutes = datetime.getMinutes().toString().padStart(2, "0");#}
+        {#let seconds = datetime.getSeconds().toString().padStart(2, "0");#}
+        {#return hours+":"+minutes+":"+seconds;#}
+        return datetime.toLocaleString();
+    }
+
+    function proceedMessages(messages_data) {
+        const message_holder = document.querySelector(".messages-holder");
+        for (i in messages_data) {
+            let message = messages_data[i];
+            let name = message["name"];
+            let text = message["text"];
+            let m_date = new Date(message["datetime"]);
+            let element = document.createElement("div");
+            element.className = "message";
+
+            let elementDate = document.createElement("b");
+            elementDate.appendChild(document.createTextNode(formatDate(m_date)));
+            let elementText = document.createTextNode("  " + name + ": " + text);
+
+            element.appendChild(elementDate);
+            element.appendChild(elementText);
+            message_holder.append(element);
+        }
+    }
+    function updateMessages() {
+        const message_holder = document.querySelector(".messages-holder");
+        while (message_holder.firstChild) {
+            message_holder.removeChild(message_holder.firstChild);
+        }
+        let request = new XMLHttpRequest();
+        request.onload = function() {
+            if (this.status >= 200 && this.status < 400) {
+                let data = JSON.parse(this.response);
+                proceedMessages(data)
+            } else {
+                console.log("Error while getting messages");
+            }
+        };
+        request.open("GET", "/api/messages");
+        request.send(null);
+    }
+    window.onload = function () {
+        updateMessages();
+    };
+</script>
+{% endblock %}

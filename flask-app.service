@@ -1,0 +1,15 @@
+# Sample service file from Miguel Grinberg tutorials
+[Unit]
+Description=Flask Test app
+After=network.target
+After=mongodb.service
+
+[Service]
+User=flask
+# Set your app path here
+WorkingDirectory=/home/flask/flask-test-app
+ExecStart=/home/flask/flask-test-app/venv/bin/gunicorn -b localhost:8000 -w 4 simplechat:app
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
